@@ -2,8 +2,8 @@
     class DbConnect{
         private $server ='localhost';
         private $dbname = 'dentsysphp';
-        private $user = 'root';
-        private $pass = '';
+        private $user = 'lrc-cla';
+        private $pass = '3Otz4z6~8';
 
         public function connect() {
 			try {
