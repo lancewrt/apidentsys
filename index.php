@@ -118,7 +118,7 @@ if($method ==='PUT'){
                     $sql = "UPDATE appointment SET status_ = 'finished' WHERE a_id = :id";
                     $stmt = $conn->prepare($sql);
                     $stmt->bindParam(':id', $id);
-
+                
                     // Execute the appointment status update
                     if ($stmt->execute()) {
                         // Get patient id from appointments table
@@ -414,7 +414,15 @@ if($method ==='PUT'){
                 $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo json_encode($services);
                 break;
-
+            
+        case 'getAudit':
+            $sql = "SELECT * FROM audit_log";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            $appt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($appt);
+            break;
+            
         case 'getAppointments':
             $sql = "SELECT 
                         a_id, 
@@ -828,7 +836,7 @@ if($method ==='PUT'){
                         if ($kind === 'Daily Report') {
                             $stmt = $conn->prepare("SELECT 
                                 a.a_id as 'ID',
-                                CONCAT(t.fname, ' ', t.lname) AS 'Patient Name',
+								CONCAT(t.fname, ' ', t.lname) AS 'Patient Name',
                                 t.email as Email,
                                 s.service_name as Service,
                                 a.date_ as 'Appointment Date',
@@ -841,7 +849,7 @@ if($method ==='PUT'){
                         } elseif ($kind === 'Monthly Report') {
                             $stmt = $conn->prepare("SELECT 
                                 a.a_id as 'ID',
-                                CONCAT(t.fname, ' ', t.lname) AS 'Patient Name',
+								CONCAT(t.fname, ' ', t.lname) AS 'Patient Name',
                                 t.email as Email,
                                 s.service_name as Service,
                                 a.date_ as 'Appointment Date',
@@ -853,7 +861,7 @@ if($method ==='PUT'){
                         } elseif ($kind === 'Custom Date' && $startDate && $endDate) {
                             $stmt = $conn->prepare("SELECT 
                                 a.a_id as 'ID',
-                                CONCAT(t.fname, ' ', t.lname) AS 'Patient Name',
+								CONCAT(t.fname, ' ', t.lname) AS 'Patient Name',
                                 t.email as Email,
                                 s.service_name as Service,
                                 a.date_ as 'Appointment Date',
@@ -978,7 +986,7 @@ if($method ==='PUT'){
                 header('Content-Type: application/json');
                 echo json_encode($response);
                 break;
-        
+
        
         case 'getPatientsByLetter':
             if (isset($_GET['letter']) && !empty($_GET['letter'])) {
@@ -1118,7 +1126,7 @@ if($method ==='PUT'){
                 }
                 break;
 
-                case 'addUser':
+            case 'addUser':
                     // Add new user
                     $username = $user->username;
                     $password = password_hash($user->password, PASSWORD_BCRYPT); // Hashing the password for security
@@ -1247,7 +1255,7 @@ if($method ==='PUT'){
                 $stmtAppointment->bindParam(':date_', $user->date_);
                 $stmtAppointment->bindParam(':time_', $user->time_);
                 $stmtAppointment->bindParam(':status_', $user->status_);
-
+            
                 $variables = "patient ID = {$temppatient_id}, " .
                             "patient name = {$user->fname} {$user->lname}, " .
                             "email = {$user->email}, " .
@@ -1441,8 +1449,8 @@ if($method ==='PUT'){
                     $response = ['status' => 0, 'message' => 'Failed to create Record.'];
                 }
                 break;
-            
-                
+              
+
               
 
             case 'login':
